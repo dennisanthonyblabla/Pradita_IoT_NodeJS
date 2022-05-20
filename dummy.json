@@ -1,0 +1,23 @@
+[
+  {
+    end_device_ids: {
+      device_id: 'eui-70b3d57ed004e889',
+      application_ids: { application_id: 'solar-panel-server' },
+      dev_eui: '70B3D57ED004E889',
+      join_eui: '0000000000000000'
+    },
+    correlation_ids: [
+      'as:up:01G3G95SGQB52WXA22JNW1TRG4',
+      'rpc:/ttn.lorawan.v3.AppAs/SimulateUplink:3fdb901c-65d5-43fd-8ef5-d434c6f59899'
+    ],
+    received_at: '2022-05-20T08:26:05.207425643Z',
+    uplink_message: {
+      f_port: 10,
+      frm_payload: 'AaRcEA==',
+      decoded_payload: { brightness: 23568, distance: 4.2 },
+      rx_metadata: [ [Object] ],
+      settings: { data_rate: [Object] }
+    },
+    simulated: true
+  }
+]
