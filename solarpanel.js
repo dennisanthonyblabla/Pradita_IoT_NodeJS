@@ -1,6 +1,6 @@
 let http = require('http');
 // Array musti diganti cara lain
-var status = [];
+var status = "";
 var filteredStatus;
 
 http.createServer((req, res) => {
@@ -22,39 +22,39 @@ http.createServer((req, res) => {
 
   // console.log("Connected!");*/
 
-const mqtt = require('mqtt')
+  const mqtt = require('mqtt')
 
-const host = 'au1.cloud.thethings.network'
-const port = '1883'
-// const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
+  const host = 'au1.cloud.thethings.network'
+  const port = '1883'
+  // const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
 
-const connectUrl = `mqtt://${host}:${port}`
-const client = mqtt.connect(connectUrl, {
-//   clientId,
-  clean: true,
-  connectTimeout: 4000,
-  username: 'solar-panel-server@ttn',
-  password: 'NNSXS.OYFBDPD24SJQPJMCKXRNHLXOPAHF3L6ZAFAHTYI.BBMRSJYZESY2KF6REPCUHNOOHYCADKPWPUKOYSIDHVHGBDQRD24Q',
-  reconnectPeriod: 1000,
-})
-
-const topic = 'v3/solar-panel-server@ttn/devices/eui-70b3d57ed004e889/up'
-client.on('connect', () => {
-  console.log('Connected')
-  client.subscribe([topic], () => {
-    console.log(`Subscribe to topic '${topic}'`)
+  const connectUrl = `mqtt://${host}:${port}`
+  const client = mqtt.connect(connectUrl, {
+    //   clientId,
+    clean: true,
+    connectTimeout: 4000,
+    username: 'solar-panel-server@ttn',
+    password: 'NNSXS.OYFBDPD24SJQPJMCKXRNHLXOPAHF3L6ZAFAHTYI.BBMRSJYZESY2KF6REPCUHNOOHYCADKPWPUKOYSIDHVHGBDQRD24Q',
+    reconnectPeriod: 1000,
   })
-  client.publish(topic, 'nodejs mqtt test', { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error(error)
-    }
-  })
-})
 
-client.on('message', (topic, payload) => {
-  console.log('Received Message:', topic, payload.toString())
-  status.push(payload.toString());
-})
+  const topic = 'v3/solar-panel-server@ttn/devices/eui-70b3d57ed004e889/up'
+  client.on('connect', () => {
+    console.log('Connected')
+    client.subscribe([topic], () => {
+      console.log(`Subscribe to topic '${topic}'`)
+    })
+    client.publish(topic, 'nodejs mqtt test', { qos: 0, retain: false }, (error) => {
+      if (error) {
+        console.error(error)
+      }
+    })
+  })
+
+  client.on('message', (topic, payload) => {
+    console.log('Received Message:', topic, payload.toString())
+    status = payload.toString();
+  })
 
 
   res.write('<html>');
@@ -62,11 +62,44 @@ client.on('message', (topic, payload) => {
 
   res.write('<h1>');
 
-  // status.toString()
-  filteredStatus = status.filter(name => name.includes('device_id'));
-  filtered = filteredStatus.toString()
-  res.write(filtered);
+  // // status.toString()
+  // filteredStatus = status.filter(name => name.includes('device_id'));
+  // filtered = filteredStatus.toString()
+
+
+  // res.write(filtered);
   res.write('</h1>');
+
+  if (status=="") {
+    console.log("nothing");
+  } else {
+    const newStatus = JSON.parse(status);
+    console.log(newStatus);
+    res.write("<h1> JSON TOSTRING </h1>")
+    res.write(newStatus.toString());
+    res.write("<br />");
+    res.write("<br />");
+
+    res.write("<h1> JSON STRINGIFY </h1>");
+    res.write(JSON.stringify(newStatus));
+    res.write("<br />");
+    res.write("<br />");
+
+    res.write("<h1> JSON PARSE FILTER </h1>");
+    const obj = JSON.parse(status, function (key, value) {
+      if (key == "received_at") {
+        return value;
+      }
+    });
+    res.write(obj);
+    res.write("<br />");
+    res.write("<br />");
+
+
+    res.write("<br />")
+  }
+
+  // res.write(myArr);
 
   // Auto Reload every 1 Second
   // res.write("<script> window.setInterval('refresh()', 1000); function refresh() {window .location.reload();} </script>")
