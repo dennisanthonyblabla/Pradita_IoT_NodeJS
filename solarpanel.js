@@ -41,16 +41,23 @@ http.createServer((req, res) => {
     status = payload;
   })
 
-
   res.write('<html>');
   res.write('<body>');
 
   if (status=="") {
 
+
+    // NOTHING HERE
+    // ------------
     res.write('<h1> SolarPanel </h1>');
-    res.write('Nothing to see here!');
-    res.write('<br><br>');
-    console.log("Nothing to see here!");
+
+    // TODO: UNCOMMENT BUAT KASIH LIAT NOTHING
+
+    // res.write('Nothing to see here!');
+    // res.write('<br><br>');
+    // console.log("Nothing to see here!");
+
+    // WARNING: DELETE / COMMENT THIS !!!
 
     let obj = {
       end_device_ids: {
@@ -98,6 +105,8 @@ http.createServer((req, res) => {
     res.write(obj['uplink_message'].decoded_payload.distance.toString() + " KM");
     res.write("<br /><br />");
 
+    // ========================
+    // WARNING: UNTIL HERE !!!
 
   } else {
 
