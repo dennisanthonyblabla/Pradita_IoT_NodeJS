@@ -1,27 +1,10 @@
 let http = require('http');
 // Array musti diganti cara lain
 var status = "";
+var statusArray = [];
 var filteredStatus;
 
 http.createServer((req, res) => {
-  /*// const mqtt = require('mqtt')
-  // const client = mqtt.connect('au1.cloud.thethings.network:1883')
-
-  // client.on('connect', function() {
-  //   client.subscribe('presence', function(err) {
-  //     if (!err) {
-  //       client.publish('presence', 'Hello mqtt')
-  //     }
-  //   })
-  // })
-
-  // client.on('message', function(topic, message) {
-  //   status.push(message.toString());
-  //   client.end();
-  // })
-
-  // console.log("Connected!");*/
-
   const mqtt = require('mqtt')
 
   const host = 'au1.cloud.thethings.network'
@@ -53,59 +36,73 @@ http.createServer((req, res) => {
 
   client.on('message', (topic, payload) => {
     console.log('Received Message:', topic, payload.toString())
-    status = payload.toString();
+    // status = payload.toString();
+    status = payload;
   })
 
 
   res.write('<html>');
   res.write('<body>');
 
-  res.write('<h1>');
-
-  // // status.toString()
-  // filteredStatus = status.filter(name => name.includes('device_id'));
-  // filtered = filteredStatus.toString()
-
-
-  // res.write(filtered);
-  res.write('</h1>');
-
   if (status=="") {
-    console.log("nothing");
+    res.write("<h1> SolarPanel </h1>");
+    console.log("Nothing to see here!");
+    res.write("Nothing to see here! <br><br>");
   } else {
     const newStatus = JSON.parse(status);
-    console.log(newStatus);
-    res.write("<h1> JSON TOSTRING </h1>")
-    res.write(newStatus.toString());
-    res.write("<br />");
+
+    // Coba-coba
+    // -----------
+    // console.log(newStatus);
+
+    // res.write("<h1> JSON TOSTRING </h1>")
+    // res.write(newStatus.toString());
+    // res.write("<br />");
+    // res.write("<br />");
+
+    // res.write("<h1> JSON STRINGIFY </h1>");
+    // res.write(JSON.stringify(newStatus));
+    // res.write("<br />");
+    // res.write("<br />");
+
+    let obj = newStatus;
+
+    // List semua disini
+    // -----------------
+    // for (key in obj) {
+    //   // console.log(key+':'+JSON.stringify(obj[key]));
+    //   res.write(key+':'+JSON.stringify(obj[key]));
+    //   res.write('<br />')
+    //   res.write('<br />')
+    // }
+
+    res.write("<h1> SolarPanel </h1>");
+
+    // Device ID
+    // -----------------
+    res.write('<b>Device ID: </b>');
+    res.write(obj['end_device_ids'].device_id);
     res.write("<br />");
 
-    res.write("<h1> JSON STRINGIFY </h1>");
-    res.write(JSON.stringify(newStatus));
-    res.write("<br />");
-    res.write("<br />");
+    // Received At
+    // -----------------
+    const rec = obj['received_at'];
 
-    res.write("<h1> JSON PARSE FILTER </h1>");
-    const obj = JSON.parse(status, function (key, value) {
-      if (key == "received_at") {
-        return value;
-      }
-    });
-    res.write(obj);
-    res.write("<br />");
-    res.write("<br />");
+    res.write('<b>Received At:  </b>');
+    res.write(obj['received_at']);
+    res.write("<br /><br />");
 
+    // Buat Array
+    // console.log(statusArray.push(rec.toString()));
+    // res.write(statusArray.toString());
 
-    res.write("<br />")
   }
 
-  // res.write(myArr);
-
   // Auto Reload every 1 Second
-  // res.write("<script> window.setInterval('refresh()', 1000); function refresh() {window .location.reload();} </script>")
+  res.write("<script> window.setInterval('refresh()', 5000); function refresh() {window .location.reload();} </script>")
 
-  // Reload Button
-  res.write('<input type="button" value="Reload Page" onClick="window.location.reload(true)">')
+  // // Reload Button
+  // res.write('<input type="button" value="Reload Page" onClick="window.location.reload(true)">')
 
   // Jangan lupa filter
 
