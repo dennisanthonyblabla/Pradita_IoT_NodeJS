@@ -91,11 +91,11 @@ http.createServer((req, res) => {
     // -----------------
 
     res.write('<b>Brightness: </b>');
-    res.write(obj['uplink_message'].decoded_payload.brightness.toString());
+    res.write(obj['uplink_message'].decoded_payload.brightness.toString()+ " Knits");
     res.write("<br />");
 
     res.write('<b>Distance: </b>');
-    res.write(obj['uplink_message'].decoded_payload.distance.toString());
+    res.write(obj['uplink_message'].decoded_payload.distance.toString() + " KM");
     res.write("<br /><br />");
 
 
